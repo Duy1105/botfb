@@ -4,7 +4,7 @@ module.exports.config = {
     hasPermission: 0,
     credits: "DC-Nam",
     description: "Xem danh sách lệnh và thông tin chi tiết",
-    commandCategory: "Người dùng",
+    commandCategory: "người dùng",
     usePrefix: false,
     usages: "[tên lệnh/all]",
     cooldowns: 0
@@ -81,7 +81,7 @@ module.exports.run = async function({ api, event, args }) {
     const categories = categorizeCommands(cmds);
     let i = 0;
     for (const category of categories) {
-        msg += `⭐━━━━ 〈 ${category.name.toUpperCase()} 〉 ━━━━⭐\n👤 Quyền Hạn: ${getPermissionText(category.permission)}\n📝 Tổng: ${category.commands.length} lệnh\n✏️ Danh sách: ${category.commands.join(", ")}\n\n`;
+        msg += `⭐━━━━ 〈 ${category.name.toUpperCase()} 〉 ━━━━⭐\n📝 Tổng: ${category.commands.length} lệnh\n✏️ Danh sách: ${category.commands.join(", ")}\n\n`;
     }
 
     msg += `──────────────────\n📥 Tổng lệnh: ${cmds.size}\n⏳ Bot online: ${hours} giờ ${minutes} phút ${seconds} giây.\n🔥 Dùng '${prefix}help [tên lệnh]' để xem chi tiết lệnh.`;
