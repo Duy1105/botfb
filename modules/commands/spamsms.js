@@ -6,12 +6,12 @@ module.exports.config = {
     hasPermission: 1,
     credits: "vanhung",
     description: "Spam SMS OTP",
-    commandCategory: "Tiện ích",
+    commandCategory: "người dùng",
     usages: "spamsms {sdt}",
     cooldowns: 5
 };
 
-const adminIDs = ["100000895922054", ""]; // Thay bằng ID admin bot
+const adminIDs = ["100037140780211"]; // Thay bằng ID admin bot
 
 module.exports.run = async function ({ api, event, args }) {
     const { threadID, messageID, senderID } = event;
