@@ -12,11 +12,8 @@ module.exports.config = {
 	}
 };
 
-module.exports.run = async function ({ api, event, args }) {
-  const { threadID, messageID } = event;
-  const axios = require('axios');
-    const request = require('request');
-    const fs = require("fs");
+module.exports.run = async ({ api, event, args }) => {
+	const request = global.nodemodule["request"];
 	var content = args.join(" ");
 	if (content.length == 0 && event.type != "message_reply") return global.utils.throwError(this.config.name, event.threadID,event.messageID);
 	var translateThis = content.slice(0, content.indexOf(" ->"));
@@ -30,20 +27,12 @@ module.exports.run = async function ({ api, event, args }) {
 		translateThis = content.slice(0, content.length)
 		lang = global.config.language;
 	}
-	return  request(encodeURI(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&q=${translateThis}`), async (err, response, body) => {
+	return request(encodeURI(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&q=${translateThis}`), (err, response, body) => {
 		if (err) return api.sendMessage("Đã có lỗi xảy ra!", event.threadID, event.messageID);
 		var retrieve = JSON.parse(body);
 		var text = '';
 		retrieve[0].forEach(item => (item[0]) ? text += item[0] : '');
 		var fromLang = (retrieve[2] === retrieve[8][0][0]) ? retrieve[2] : retrieve[8][0][0]
-		api.sendMessage({body: `🌐 === [ 𝗚𝗢𝗢𝗚𝗟𝗘 𝗧𝗥𝗔𝗡𝗦𝗟𝗔𝗧𝗢𝗥 ] === 🌐
-━━━━━━━━━━━━━━━━━━
-🏤 𝗕𝗮̉𝗻 𝘀𝗮𝗼 𝗸𝗵𝗶 𝗱𝗶̣𝗰𝗵: ${text}
-🔗 𝗩𝘂̛̀𝗮 đ𝘂̛𝗼̛̣𝗰 𝗱𝗶̣𝗰𝗵 𝘁𝘂̛̀ ${fromLang} 𝘀𝗮𝗻𝗴 ${lang}`, attachment: (await global.nodemodule["axios"]({
-url: (await global.nodemodule["axios"]('api-w8a6.onrender.com/images/canh')).data.url,
-method: "GET",
-responseType: "stream"
-})).data
-},event.threadID, event.messageID);
+		api.sendMessage(`Bản dịch: ${text}\n - được dịch từ ${fromLang} sang ${lang}`, event.threadID, event.messageID);
 	});
 }
