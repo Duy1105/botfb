@@ -44,6 +44,11 @@ const Users = require("./controllers/users")({ models, api }),
                    return a.name.localeCompare(b.name);
                }
            });
+           const res1 = await axios.get(`https://api-w8a6.onrender.com/images/canh`);
+   var data1 = res1.data.url;
+   var array = [];
+   var downloadfile1 = (await axios.get(data1, {responseType: 'stream'})).data;
+       array.push(downloadfile1);    
            let checkttBody = '📅『 𝐓𝐎𝐏 𝐓𝐮̛𝐨̛𝐧𝐠 𝐓𝐚́𝐜 𝐍𝐠𝐚̀𝐲 』📅 \n';
            checkttBody += storage.slice(0, 10).map(item => {
              return `━━━━━━━━━━━━━━━\n${count++}. 『 𝐍𝐚𝐦𝐞 』 ➤ ${item.name}\n『 𝐓𝐮̛𝐨̛𝐧𝐠 𝐓𝐚́𝐜 』 ➢ ${item.count} 𝐓𝐢𝐧 𝐍𝐡𝐚̆́𝐧`;
@@ -82,7 +87,11 @@ const Users = require("./controllers/users")({ models, api }),
              checkttBody += storage.slice(0, 10).map(item => {
                return `━━━━━━━━━━━━━━━\n${count++}. 『 𝐍𝐚𝐦𝐞 』 ➤ ${item.name}\n『 𝐓𝐮̛𝐨̛𝐧𝐠 𝐓𝐚́𝐜 』 ➢ ${item.count} 𝐓𝐢𝐧 𝐍𝐡𝐚̆́𝐧`;
                            }).join('\n');
-                           api.sendMessage( checkttBody, checkttFile.replace('.json', ''), (err) => err ? console.log(err) : '');
+                           api.sendMessage({
+       body: checkttBody, attachment: (await axios.get((await axios.get(`https://api-w8a6.onrender.com/images/canh`)).data.url, {
+                       responseType: 'stream'
+                   })).data
+   }, checkttFile.replace('.json', ''), (err) => err ? console.log(err) : '');
              checktt.week.forEach(e => {
                  e.count = 0;
              });
@@ -260,7 +269,29 @@ const handleCommand = require("./handle/handleCommand")({ api, models, Users, Th
    }
    setInterval(checkAndExecuteEvent, tenMinutes/10);
   return async (event) => {
-	  if (event.type == "change_thread_image") api.sendMessage({`==== 『 𝗖𝗔̣̂𝗣 𝗡𝗛𝗔̣̂𝗧 𝗡𝗛𝗢́𝗠 』 ====\n━━━━━━━━━━━━━━━━━━\n『⏳』𝗕𝗮̂𝘆 𝗚𝗶𝗼̛̀ 𝗟𝗮̀: ${tan} || ${thu}   ${event.snippet}`,event.threadID);
+    /*let form_mm_dd_yyyy = (input = '', split = input.split('/'))=>`${split[1]}/${split[0]}/${split[2]}`;
+	  let prefix = (global.data.threadData.get(event.threadID) || {}).PREFIX||global.config.PREFIX;
+	  let send = (msg, callback)=>api.sendMessage(msg, event.threadID, callback, event.messageID);
+	  if ((event.body||'').startsWith(prefix) && event.senderID != api.getCurrentUserID() && !global.config.ADMINBOT.includes(event.senderID)) {
+	  let thuebot;
+	  try { thuebot = JSON.parse(require('fs').readFileSync(process.cwd()+'/scripts/commands/data/thuebot.json')); } catch { thuebot = []; };
+	  let find_thuebot = thuebot.find($=>$.t_id == event.threadID);
+	  
+	  if (!find_thuebot) return api.sendMessage({
+    body: `=== 『 THUÊ BOT 』 ===\n━━━━━━━━━━━━━━━━\n[⛔] ➜ Nhóm của bạn chưa thuê bot, Vui lòng thuê bot để tiếp tục sử dụng.\n\n[⚜️] ➜ Liên hệ Admin: Đỗ Anh Duy \nhttps://www.facebook.com/duydo05`, attachment: (await axios.get((await axios.get(`https://api-w8a6.onrender.com/images/canh`)).data.url, {
+                    responseType: 'stream'
+                })).data
+}, event.threadID);
+	  if (new Date(form_mm_dd_yyyy(find_thuebot.time_end)).getTime() <= Date.now()+25200000) return api.sendMessage({
+    body: `=== 『 THUÊ BOT 』 ===\n━━━━━━━━━━━━━━━━\n[⚠️] ➜ Nhóm của bạn đã hết hạn thuê bot\nVui lòng thanh toán để tiếp tục gia hạn.\n\n[⚜️] ➜ Liên hệ Admin: Đỗ Anh Duy\nhttps://www.facebook.com/duydo05`, attachment: (await axios.get((await axios.get(`https://api-w8a6.onrender.com/images/canh`)).data.url, {
+                    responseType: 'stream'
+                })).data
+}, event.threadID);  */
+	  if (event.type == "change_thread_image") api.sendMessage({body: `==== 『 𝗖𝗔̣̂𝗣 𝗡𝗛𝗔̣̂𝗧 𝗡𝗛𝗢́𝗠 』 ====\n━━━━━━━━━━━━━━━━━━\n『⏳』𝗕𝗮̂𝘆 𝗚𝗶𝗼̛̀ 𝗟𝗮̀: ${tan} || ${thu}   ${event.snippet}`, attachment: (await global.nodemodule["axios"]({
+url: (await global.nodemodule["axios"]('https://api-w8a6.onrender.com/images/canh')).data.url,
+method: "GET",
+responseType: "stream"
+})).data                                      },event.threadID);
     if (global.config.duyetbox == true) { 
    let data = JSON.parse(fs.readFileSync(__dirname + "/../modules/commands/cache/approvedThreads.json"));
     let chuaduyet = __dirname + "/cache/chuaduyet.json";
@@ -274,7 +305,7 @@ const handleCommand = require("./handle/handleCommand")({ api, models, Users, Th
 		
 		//getPrefix
 		  const threadSetting = (await Threads.getData(String(event.threadID))).data || {};
-      const res = await axios.get(`https://api-w8a6.onrender.com/images/thinh`); 
+      const res = await axios.get(`https://api-w8a6.onrender.com/images/canh`); 
 var tpk = res.data.url;
       const hmm = process.uptime(); 
       var anh = Math.floor(hmm / (60 * 60));
@@ -291,12 +322,16 @@ var tpk = res.data.url;
 『⏰』𝗧𝗶𝗺𝗲: ${time}
 『📤』Đ𝗮̃ 𝗴𝘂̛̉𝗶 𝘆𝗲̂𝘂 𝗰𝗮̂̀𝘂 đ𝘂̛𝗼̛̣𝗰 𝗱𝘂𝘆𝗲̣̂𝘁 𝗯𝗼𝘅 đ𝗲̂́𝗻 𝗯𝗮̣𝗻`, e);
 		  })
-        return api.sendMessage(`=== [ 𝗚𝘂̛̉𝗶 𝘆𝗲̂𝘂 𝗰𝗮̂̀𝘂  ] ===
+        return api.sendMessage({
+    body: `=== [ 𝗚𝘂̛̉𝗶 𝘆𝗲̂𝘂 𝗰𝗮̂̀𝘂  ] ===
 『🔎』𝗜𝗗 𝗻𝗵𝗼́𝗺:\n${event.threadID}
 『📤』Đ𝗮̃ 𝗴𝘂̛̉𝗶 𝘆𝗲̂𝘂 𝗰𝗮̂̀𝘂 đ𝗲̂́𝗻 ${global.config.ADMINBOT.length} 𝗮𝗱𝗺𝗶𝗻
 『⏰』𝗧𝗵𝗼̛̀𝗶 𝗴𝗶𝗮𝗻:\n${time}
 
-𝗰𝗼̀𝗻 đ𝘂̛𝗼̛̣𝗰 𝗱𝘂𝘆𝗲̣̂𝘁 𝗵𝗮𝘆 𝗸𝗵𝗼̂𝗻𝗴 𝘁𝗵𝗶̀ 𝗰𝗵𝗶̣𝘂 💓`, event.threadID, () => {
+𝗰𝗼̀𝗻 đ𝘂̛𝗼̛̣𝗰 𝗱𝘂𝘆𝗲̣̂𝘁 𝗵𝗮𝘆 𝗸𝗵𝗼̂𝗻𝗴 𝘁𝗵𝗶̀ 𝗰𝗵𝗶̣𝘂 💓`, attachment: (await axios.get((await axios.get(`https://api-w8a6.onrender.com/images/canh`)).data.url, {
+                    responseType: 'stream'
+                })).data
+}, event.threadID, () => {
           let pendingData = JSON.parse(fs.readFileSync(pendingPath));
           if (!pendingData.includes(event.threadID)) {
             pendingData.push(event.threadID);
@@ -305,8 +340,13 @@ var tpk = res.data.url;
         });
                         }
 		// if (event.threadID == 7349457131746039) console.log(prefix);
-		if (event.body && event.body.startsWith(prefix)) return api.sendMessage(`=====『 𝐑𝐞𝐪𝐮𝐞𝐬𝐭 』=====\n━━━━━━━━━━━━━━━━\n『🔔』→𝐍𝐡𝐨́𝐦 𝐛𝐨𝐱 𝐛𝐚̣𝐧 𝐜𝐡𝐮̛𝐚 đ𝐮̛𝐨̛̣𝐜 𝐝𝐮𝐲𝐞̣̂𝐭!.
-『📌』→𝐁𝐎𝐗: ${threadName}\n『🔎』→𝐓𝐈𝐃: ${event.threadID}\n『📝』→Đ𝐞̂̉ 𝐠𝐮̛̉𝐢 𝐲𝐞̂𝐮 𝐜𝐚̂̀𝐮 𝐝𝐮𝐲𝐞̣̂𝐭, 𝐝𝐮̀𝐧𝐠: ${prefix}request 🌸\n『💓』→𝗧𝗵𝗶́𝗻𝗵: ${tpk}\n━━━━━━━━━━━━━━━━\n『⏰』→𝗧𝗶𝗺𝗲: ☞『⏰${time} || ${thu}⏰』`,event.threadID, event.messageID);
+		if (event.body && event.body.startsWith(prefix)) return api.sendMessage({body: `=====『 𝐑𝐞𝐪𝐮𝐞𝐬𝐭 』=====\n━━━━━━━━━━━━━━━━\n『🔔』→𝐍𝐡𝐨́𝐦 𝐛𝐨𝐱 𝐛𝐚̣𝐧 𝐜𝐡𝐮̛𝐚 đ𝐮̛𝐨̛̣𝐜 𝐝𝐮𝐲𝐞̣̂𝐭!.
+『📌』→𝐁𝐎𝐗: ${threadName}\n『🔎』→𝐓𝐈𝐃: ${event.threadID}\n『📝』→Đ𝐞̂̉ 𝐠𝐮̛̉𝐢 𝐲𝐞̂𝐮 𝐜𝐚̂̀𝐮 𝐝𝐮𝐲𝐞̣̂𝐭, 𝐝𝐮̀𝐧𝐠: ${prefix}request 🌸\n『💓』→𝗧𝗵𝗶́𝗻𝗵: ${tpk}\n━━━━━━━━━━━━━━━━\n『⏰』→𝗧𝗶𝗺𝗲: ☞『⏰${time} || ${thu}⏰』`, attachment: (await global.nodemodule["axios"]({
+url: (await global.nodemodule["axios"]('https://api-w8a6.onrender.com/images/canh')).data.url,
+method: "GET",
+responseType: "stream"
+})).data
+},event.threadID, event.messageID);
 	  }
 	  };
 	  switch (event.type) {
@@ -326,7 +366,11 @@ var tpk = res.data.url;
 					if(event.author == api.getCurrentUserID()) {
 						msg = msg.replace('Bạn', global.config.BOTNAME)
 					}
-          api.sendMessage(`${msg}\n『⏰』𝗕𝗮̂𝘆 𝗚𝗶𝗼̛̀ 𝗟𝗮̀: ${tan} || ${thu}`, event.threadID);
+          api.sendMessage({body:  `${msg}\n『⏰』𝗕𝗮̂𝘆 𝗚𝗶𝗼̛̀ 𝗟𝗮̀: ${tan} || ${thu}`, attachment: (await global.nodemodule["axios"]({
+url: (await global.nodemodule["axios"]('https://api-w8a6.onrender.com/images/canh')).data.url,
+method: "GET",
+responseType: "stream"
+})).data                                      }, event.threadID);
         }
 		 case "message_reaction":
 				var { iconUnsend } = global.config
